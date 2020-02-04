@@ -18,7 +18,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bytedance.android.lesson.restapi.solution.bean.Cat;
 import com.bytedance.android.lesson.restapi.solution.bean.Feed;
+import com.bytedance.android.lesson.restapi.solution.bean.FeedResponse;
+import com.bytedance.android.lesson.restapi.solution.bean.PostVideoResponse;
+import com.bytedance.android.lesson.restapi.solution.newtork.ICatService;
+import com.bytedance.android.lesson.restapi.solution.newtork.IMiniDouyinService;
 import com.bytedance.android.lesson.restapi.solution.utils.ResourceUtils;
 
 import java.io.File;
@@ -28,6 +34,11 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Solution2C2Activity extends AppCompatActivity {
 
@@ -53,7 +64,8 @@ public class Solution2C2Activity extends AppCompatActivity {
     private void initBtns() {
         mBtn = findViewById(R.id.btn);
         mBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 String s = mBtn.getText().toString();
                 if (getString(R.string.select_an_image).equals(s)) {
                     if (requestReadExternalStoragePermission("select an image")) {
@@ -84,7 +96,7 @@ public class Solution2C2Activity extends AppCompatActivity {
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Toast.makeText(this, "You should grant external storage permission to continue " + explanation, Toast.LENGTH_SHORT).show();
             } else {
-                ActivityCompat.requestPermissions(Solution2C2Activity.this, new String[] {
+                ActivityCompat.requestPermissions(Solution2C2Activity.this, new String[]{
                         Manifest.permission.READ_EXTERNAL_STORAGE
                 }, GRANT_PERMISSION);
             }
@@ -98,7 +110,8 @@ public class Solution2C2Activity extends AppCompatActivity {
         mRv = findViewById(R.id.rv);
         mRv.setLayoutManager(new LinearLayoutManager(this));
         mRv.setAdapter(new RecyclerView.Adapter() {
-            @NonNull @Override
+            @NonNull
+            @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 ImageView imageView = new ImageView(viewGroup.getContext());
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -111,11 +124,12 @@ public class Solution2C2Activity extends AppCompatActivity {
                 ImageView iv = (ImageView) viewHolder.itemView;
 
                 // TODO-C2 (10) Uncomment these 2 lines, assign image url of Feed to this url variable
-//                String url = mFeeds.get(i).;
-//                Glide.with(iv.getContext()).load(url).into(iv);
+                String url = mFeeds.get(i).getFeeds().get(0).getImage_url();
+                Glide.with(iv.getContext()).load(url).into(iv);
             }
 
-            @Override public int getItemCount() {
+            @Override
+            public int getItemCount() {
                 return mFeeds.size();
             }
         });
@@ -169,6 +183,28 @@ public class Solution2C2Activity extends AppCompatActivity {
 
         // TODO-C2 (6) Send Request to post a video with its cover image
         // if success, make a text Toast and show
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://apxi.thecatapi.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IMiniDouyinService miniDouyinService = retrofit.create(IMiniDouyinService.class);
+        MultipartBody.Part video = getMultipartFromUri("video", mSelectedVideo);
+        MultipartBody.Part image = getMultipartFromUri("cover_image", mSelectedImage);
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        parts.add(video);
+        parts.add(image);
+        Call<PostVideoResponse> uploadCall = miniDouyinService.uploadOneFile(parts);
+        uploadCall.enqueue(new Callback<PostVideoResponse>() {
+            @Override
+            public void onResponse(Call<PostVideoResponse> call, Response<PostVideoResponse> response) {
+                Toast.makeText(Solution2C2Activity.this, "success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<PostVideoResponse> call, Throwable t) {
+                Toast.makeText(Solution2C2Activity.this, "fail", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void fetchFeed(View view) {
@@ -178,6 +214,27 @@ public class Solution2C2Activity extends AppCompatActivity {
         // TODO-C2 (9) Send Request to fetch feed
         // if success, assign data to mFeeds and call mRv.getAdapter().notifyDataSetChanged()
         // don't forget to call resetRefreshBtn() after response received
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.thecatapi.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IMiniDouyinService miniDouyinService = retrofit.create(IMiniDouyinService.class);
+        Call<Feed> repos = miniDouyinService.getFeedResponse();
+        repos.enqueue(new Callback<Feed>() {
+            @Override
+            public void onResponse(Call<Feed> call, Response<Feed> response) {
+                Toast.makeText(Solution2C2Activity.this, "success", Toast.LENGTH_SHORT).show();
+                resetRefreshBtn();
+                mFeeds.add(response.body());
+                mRv.getAdapter().notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Feed> call, Throwable t) {
+                Toast.makeText(Solution2C2Activity.this, "fail", Toast.LENGTH_SHORT).show();
+                resetRefreshBtn();
+            }
+        });
     }
 
     private void resetRefreshBtn() {
