@@ -16,6 +16,8 @@ import android.view.View;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Clock extends View {
 
@@ -68,6 +70,8 @@ public class Clock extends View {
     public Clock(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
+
+
     }
 
     @Override
@@ -103,6 +107,15 @@ public class Clock extends View {
         this.hoursValuesColor = DEFAULT_PRIMARY_COLOR;
 
         numbersColor = Color.WHITE;
+
+        // 启动每间隔一秒刷新一次界面
+        Timer timer=new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                postInvalidate();
+            }
+        },0,1000);
     }
 
     @Override
@@ -140,9 +153,9 @@ public class Clock extends View {
 
         for (int i = 0; i < FULL_ANGLE; i += 6 /* Step */) {
 
-            if ((i % RIGHT_ANGLE) != 0 && (i % 15) != 0)
+            if ((i % RIGHT_ANGLE) != 0 && (i % 15) != 0) {
                 paint.setAlpha(CUSTOM_ALPHA);
-            else {
+            } else {
                 paint.setAlpha(FULL_ALPHA);
             }
 
@@ -153,7 +166,6 @@ public class Clock extends View {
             int stopY = (int) (mCenterX - rEnd * Math.sin(Math.toRadians(i)));
 
             canvas.drawLine(startX, startY, stopX, stopY, paint);
-
         }
     }
 
@@ -198,7 +210,34 @@ public class Clock extends View {
         // Default Color:
         // - hoursValuesColor
 
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(hoursValuesColor);
+        paint.setTextSize(70);
+        paint.setTextAlign(Paint.Align.CENTER);
 
+
+        int rPadded = mCenterX - (int) (mWidth * 0.1f);
+
+        for (int i = 0; i < FULL_ANGLE; i += 30 /* Step */) {
+
+            if ((i % RIGHT_ANGLE) != 0 && (i % 15) != 0) {
+                paint.setAlpha(CUSTOM_ALPHA);
+            } else {
+                paint.setAlpha(FULL_ALPHA);
+            }
+
+            int startX = (int) (mCenterX + rPadded * Math.sin(Math.toRadians(i)));
+            int startY = (int) (mCenterX - rPadded * Math.cos(Math.toRadians(i)));
+
+            String str = "";
+            if (i >= 300) {
+                str = i / 30 + "";
+            } else {
+                str = "0" + i / 30;
+            }
+            canvas.drawText(str, 0, str.length(), startX, startY, paint);
+        }
     }
 
     /**
@@ -213,6 +252,48 @@ public class Clock extends View {
         // - hoursNeedleColor
         // - minutesNeedleColor
 
+        Calendar mCalendar = Calendar.getInstance();
+        int hour = mCalendar.get(Calendar.HOUR);
+        int minute = mCalendar.get(Calendar.MINUTE);
+        int second = mCalendar.get(Calendar.SECOND);
+
+        int mHourPointerWidth = 8;
+        int mHourPointerLength = 200;
+        int mMinutePointerWidth = 6;
+        int mMinutePointerLength = 250;
+        int mSecondPointerWidth = 4;
+        int mSecondPointerLength = 300;
+
+        Paint mPaint = new Paint();
+        mPaint.setStrokeWidth(mHourPointerWidth);
+        mPaint.setColor(hoursNeedleColor);
+        // 当前时间的总秒数
+        float s = hour * 60 * 60 + minute * 60 + second;
+        // 百分比
+        float percentage = s / (12 * 60 * 60);
+        // 通过角度计算弧度值，因为时钟的角度起线是y轴负方向，而View角度的起线是x轴正方向，所以要加270度
+        float angle = 270 + 360 * percentage;
+        float x = (float) (mCenterX + mHourPointerLength * Math.cos(Math.PI * 2 / 360 * angle));
+        float y = (float) (mCenterY + mHourPointerLength * Math.sin(Math.PI * 2 / 360 * angle));
+        canvas.drawLine(mCenterX, mCenterY, x, y, mPaint);
+
+        mPaint.setStrokeWidth(mMinutePointerWidth);
+        mPaint.setColor(minutesNeedleColor);
+        s = minute * 60 + second;
+        percentage = s / (60 * 60);
+        angle = 270 + 360 * percentage;
+        x = (float) (mCenterX + mMinutePointerLength * Math.cos(Math.PI * 2 / 360 * angle));
+        y = (float) (mCenterY + mMinutePointerLength * Math.sin(Math.PI * 2 / 360 * angle));
+        canvas.drawLine(mCenterX, mCenterY, x, y, mPaint);
+
+        mPaint.setStrokeWidth(mSecondPointerWidth);
+        mPaint.setColor(secondsNeedleColor);
+        s = second;
+        percentage = s / 60;
+        angle = 270 + 360 * percentage;
+        x = (float) (mCenterX + mSecondPointerLength * Math.cos(Math.PI * 2 / 360 * angle));
+        y = (float) (mCenterY + mSecondPointerLength * Math.sin(Math.PI * 2 / 360 * angle));
+        canvas.drawLine(mCenterX, mCenterY, x, y, mPaint);
     }
 
     /**
@@ -225,6 +306,16 @@ public class Clock extends View {
         // - centerInnerColor
         // - centerOuterColor
 
+        Paint paint = new Paint();
+        paint.setStrokeWidth(10);
+
+        paint.setColor(centerOuterColor);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(mCenterX, mCenterY, 15, paint);
+
+        paint.setColor(centerInnerColor);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(mCenterX, mCenterY, 15, paint);
     }
 
     public void setShowAnalog(boolean showAnalog) {
