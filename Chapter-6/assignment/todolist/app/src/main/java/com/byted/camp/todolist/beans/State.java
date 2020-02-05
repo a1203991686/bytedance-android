@@ -6,6 +6,9 @@ package com.byted.camp.todolist.beans;
  * @author xuyingyi@bytedance.com (Yingyi Xu)
  */
 public enum State {
+    /**
+     *
+     */
     TODO(0), DONE(1);
 
     public final int intValue;

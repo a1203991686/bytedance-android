@@ -13,18 +13,26 @@ public class TodoDbHelper extends SQLiteOpenHelper {
 
     // TODO 定义数据库名、版本；创建数据库
 
-    public TodoDbHelper(Context context) {
-        super(context, "todo", null, 0);
+    private static final String DB_NAME = "todo.db";
+
+    private static final int DB_VERSION = 2;
+
+    public TodoDbHelper(Context paramContext) {
+        super(paramContext, "todo.db", null, 2);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-
+    public void onCreate(SQLiteDatabase paramSQLiteDatabase) {
+        paramSQLiteDatabase.execSQL("CREATE TABLE note(_id INTEGER PRIMARY KEY AUTOINCREMENT, date INTEGER, state INTEGER, content TEXT, priority INTEGER)");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    public void onUpgrade(SQLiteDatabase paramSQLiteDatabase, int paramInt1, int paramInt2) {
+        while (paramInt1 < paramInt2) {
+            if (paramInt1 == 1) {
+                paramSQLiteDatabase.execSQL("ALTER TABLE note ADD priority INTEGER");
+            }
+            paramInt1++;
+        }
     }
-
 }
