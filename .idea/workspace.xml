@@ -30,7 +30,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -43,7 +43,7 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -97,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580817802088</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="完成第6章">
+      <created>1580894694636</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1580894694636</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -182,7 +189,8 @@
     <MESSAGE value="完成第3章EX1" />
     <MESSAGE value="完成第4章" />
     <MESSAGE value="完成第5章" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成第5章" />
+    <MESSAGE value="完成第6章" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成第6章" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">
