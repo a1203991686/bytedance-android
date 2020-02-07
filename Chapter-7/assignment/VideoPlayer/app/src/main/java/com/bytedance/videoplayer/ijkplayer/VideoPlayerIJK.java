@@ -203,6 +203,12 @@ public class VideoPlayerIJK extends FrameLayout {
      * -------======--------- 下面封装了一下控制视频的方法
      */
 
+    public void firstStart() {
+        if (mMediaPlayer != null) {
+
+        }
+    }
+
     public void start() {
         if (mMediaPlayer != null) {
             mMediaPlayer.start();
