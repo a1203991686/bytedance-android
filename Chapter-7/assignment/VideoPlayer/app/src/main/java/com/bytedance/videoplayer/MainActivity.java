@@ -2,12 +2,15 @@ package com.bytedance.videoplayer;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import com.bytedance.videoplayer.ijkplayer.VideoPlayerIJK;
 import com.bytedance.videoplayer.ijkplayer.VideoPlayerListener;
 
+import java.nio.file.Path;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -170,6 +174,16 @@ public class MainActivity extends AppCompatActivity {
                 ijkPlayer.seekTo(seekBarProgress);
             }
         });
+
+        // 获取调起的uri
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            String[] proj = {MediaStore.Audio.Media.DATA};
+            Cursor cursor = managedQuery(uri, proj, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+            cursor.moveToFirst();
+            ijkPlayer.setVideoPath(cursor.getString(columnIndex));
+        }
     }
 
     private String getVideoPath() {
