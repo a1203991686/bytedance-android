@@ -29,6 +29,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -45,9 +46,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CustomCameraActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_custom_camera"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

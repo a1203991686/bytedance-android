@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Chapter-7/assignment/VideoPlayer/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter-7/assignment/VideoPlayer/app/src/main/AndroidManifest.xml" afterDir="false" />
-    </list>
+    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +28,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -43,7 +41,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -118,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581047968658</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="优化第7章Demo，实现外部调起播放功能">
+      <created>1581058258101</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1581058258101</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -206,7 +211,8 @@
     <MESSAGE value="完成第6章" />
     <MESSAGE value="完成第7章基本要求，但是还有许多需要优化的地方" />
     <MESSAGE value="优化第7章Demo" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化第7章Demo" />
+    <MESSAGE value="优化第7章Demo，实现外部调起播放功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化第7章Demo，实现外部调起播放功能" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">
