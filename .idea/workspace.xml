@@ -28,6 +28,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -39,9 +42,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -130,14 +130,21 @@
       <option name="project" value="LOCAL" />
       <updated>1581067265293</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="新增第8章的延时摄影和分段摄影功能。">
+      <created>1581069273102</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1581069273102</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.35042736" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.14163615" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -145,7 +152,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info id="Build Variants" order="8" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="0" visible="true" weight="0.2987552" />
+      <window_info anchor="bottom" id="Version Control" order="0" visible="true" weight="0.2987552" />
       <window_info anchor="bottom" id="TODO" order="1" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
@@ -220,7 +227,8 @@
     <MESSAGE value="优化第7章Demo" />
     <MESSAGE value="优化第7章Demo，实现外部调起播放功能" />
     <MESSAGE value="完成第8章" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成第8章" />
+    <MESSAGE value="新增第8章的延时摄影和分段摄影功能。" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增第8章的延时摄影和分段摄影功能。" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">

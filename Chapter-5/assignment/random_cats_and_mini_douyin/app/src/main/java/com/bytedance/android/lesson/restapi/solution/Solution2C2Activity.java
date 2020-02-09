@@ -224,8 +224,12 @@ public class Solution2C2Activity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
                 Toast.makeText(Solution2C2Activity.this, "success", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onResponse: success");
+
                 resetRefreshBtn();
+                assert response.body() != null;
                 mFeeds.add(response.body());
+                Log.d(TAG, "onResponse: " + response.body().toString());
                 mRv.getAdapter().notifyDataSetChanged();
             }
 
