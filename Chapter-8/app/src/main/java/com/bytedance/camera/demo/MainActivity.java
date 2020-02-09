@@ -66,18 +66,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void requestCameraPermission(Context context) {
-
-    }
-
-    private void requestAudioPermission(Context context) {
-
-    }
-
-    private void requestWritePermission(Context context) {
-
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {

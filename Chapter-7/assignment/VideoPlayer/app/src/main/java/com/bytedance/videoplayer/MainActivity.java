@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
         }
         ijkPlayer.setListener(new VideoPlayerListener());
-        ijkPlayer.setVideoResource(R.raw.bytedance);
-//        ijkPlayer.setVideoPath(getVideoPath());
+//        ijkPlayer.setVideoResource(R.raw.bytedance);
+        ijkPlayer.setVideoPath(getVideoPath());
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -140,11 +140,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isFullScreen) {
-                    isFullScreen = false;
-                } else {
-                    isFullScreen = true;
-                }
+                isFullScreen = !isFullScreen;
                 fullChangeScreen();
                 ijkPlayer.changeScreen(MainActivity.this);
             }
@@ -187,7 +183,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getVideoPath() {
-        return "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
+//        return "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8";
+        return "https://lf1-hscdn-tos.pstatp.com/obj/developer-baas/baas/tt7217xbo2wz3cem41/a8efa55c5c22de69_1560563154288.mp4";
 //        return "android.resource://" + this.getPackageName() + "/" + resId;
     }
 

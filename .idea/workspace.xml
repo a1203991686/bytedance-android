@@ -28,9 +28,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -42,6 +39,9 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -137,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581069273102</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="完成miniDouyin首页的RecyclerView">
+      <created>1581228133741</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1581228133743</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -228,7 +235,8 @@
     <MESSAGE value="优化第7章Demo，实现外部调起播放功能" />
     <MESSAGE value="完成第8章" />
     <MESSAGE value="新增第8章的延时摄影和分段摄影功能。" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增第8章的延时摄影和分段摄影功能。" />
+    <MESSAGE value="完成miniDouyin首页的RecyclerView" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成miniDouyin首页的RecyclerView" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">

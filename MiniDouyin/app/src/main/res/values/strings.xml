@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MiniDouyin</string>
     <string name="feedImage">FeedImage</string>
+    <string name="select_an_image">SelectAnImage</string>
+    <string name="select_a_video">SelectAVideo</string>
+    <string name="post_it">PostIt</string>
+    <string name="success_try_refresh">SuccessTryRefresh</string>
 </resources>

@@ -43,6 +43,7 @@
             android:textSize="18sp" />
 
         <ImageView
+            android:id="@+id/btn_capture_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_box_white_40dp" />
