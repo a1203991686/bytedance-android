@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="" />
+    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +30,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -39,7 +42,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="AndroidView" />
       <pane id="PackagesPane" />
     </panes>
@@ -144,7 +146,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581228133743</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频">
+      <created>1581260176131</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1581260176131</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -159,7 +168,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info id="Build Variants" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="0" visible="true" weight="0.2987552" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.2987552" />
       <window_info anchor="bottom" id="TODO" order="1" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
@@ -236,7 +245,8 @@
     <MESSAGE value="完成第8章" />
     <MESSAGE value="新增第8章的延时摄影和分段摄影功能。" />
     <MESSAGE value="完成miniDouyin首页的RecyclerView" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成miniDouyin首页的RecyclerView" />
+    <MESSAGE value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">
