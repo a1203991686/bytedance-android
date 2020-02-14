@@ -1,6 +1,6 @@
 package com.littlecorgi.minidouyin.network
 
-import com.littlecorgi.minidouyin.bean.PostVideoResponse
+import com.littlecorgi.minidouyin.bean.publishvideo.PostVideoResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Multipart

@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin
+package com.littlecorgi.minidouyin.view.publishvideo
 
 import android.Manifest
 import android.app.Activity
@@ -12,11 +12,14 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.littlecorgi.minidouyin.PublishVideoActivity
-import com.littlecorgi.minidouyin.bean.PostVideoResponse
+import com.littlecorgi.minidouyin.R
+import com.littlecorgi.minidouyin.ViewModelFactory
+import com.littlecorgi.minidouyin.bean.publishvideo.PostVideoResponse
 import com.littlecorgi.minidouyin.network.IPostVideoInterface
 import com.littlecorgi.minidouyin.utils.ResourceUtils
+import com.littlecorgi.minidouyin.viewModel.PublishVideoViewModel
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -31,6 +34,9 @@ import java.io.File
  * @author tianweikang
  */
 class PublishVideoActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: PublishVideoViewModel
+
     private lateinit var mBtn: Button
     private lateinit var mImageView: ImageView
     private var mSelectedImage: Uri? = null
@@ -38,6 +44,7 @@ class PublishVideoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish_video)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory()).get(PublishVideoViewModel::class.java)
         mBtn = findViewById(R.id.button)
         mImageView = findViewById(R.id.imageView)
         initBtns()

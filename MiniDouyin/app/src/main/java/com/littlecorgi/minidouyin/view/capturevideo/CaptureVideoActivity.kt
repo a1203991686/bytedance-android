@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin
+package com.littlecorgi.minidouyin.view.capturevideo
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,8 @@ import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.littlecorgi.minidouyin.PublishVideoActivity
+import com.littlecorgi.minidouyin.R
+import com.littlecorgi.minidouyin.view.publishvideo.PublishVideoActivity
 import com.littlecorgi.minidouyin.utils.Utils
 import java.io.FileOutputStream
 import java.io.IOException

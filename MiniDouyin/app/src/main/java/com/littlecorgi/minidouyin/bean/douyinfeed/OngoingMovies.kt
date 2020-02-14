@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin.bean
+package com.littlecorgi.minidouyin.bean.douyinfeed
 
 import com.google.gson.annotations.SerializedName
 

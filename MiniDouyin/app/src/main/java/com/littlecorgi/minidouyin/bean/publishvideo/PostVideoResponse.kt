@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin.bean
+package com.littlecorgi.minidouyin.bean.publishvideo
 
 /**
  * @author Tian Weikang tianweikang.corgi@bytedance.com

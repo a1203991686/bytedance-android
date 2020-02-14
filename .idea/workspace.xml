@@ -30,7 +30,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -42,8 +42,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -153,14 +153,21 @@
       <option name="project" value="LOCAL" />
       <updated>1581260176131</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="将miniDouyin代码转换成kotlin">
+      <created>1581423050148</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1581423050148</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.14163615" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.14163615" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -168,7 +175,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info id="Build Variants" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="0" weight="0.2987552" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="0" visible="true" weight="0.2987552" />
       <window_info anchor="bottom" id="TODO" order="1" />
       <window_info anchor="bottom" id="Terminal" order="2" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
@@ -246,7 +253,8 @@
     <MESSAGE value="新增第8章的延时摄影和分段摄影功能。" />
     <MESSAGE value="完成miniDouyin首页的RecyclerView" />
     <MESSAGE value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
+    <MESSAGE value="将miniDouyin代码转换成kotlin" />
+    <option name="LAST_COMMIT_MESSAGE" value="将miniDouyin代码转换成kotlin" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">

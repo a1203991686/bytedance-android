@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin.ijkplayer
+package com.littlecorgi.minidouyin.ijkplayer.util
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor

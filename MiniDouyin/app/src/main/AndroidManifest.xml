@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PublishVideoActivity"></activity>
+        <activity android:name=".view.publishvideo.PublishVideoActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -33,7 +33,7 @@
         </provider>
 
         <activity android:name=".VideoPlayActivity" />
-        <activity android:name=".CaptureVideoActivity" />
+        <activity android:name=".view.capturevideo.CaptureVideoActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

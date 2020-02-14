@@ -47,7 +47,7 @@ object Utils {
                 if (cursor!!.moveToFirst()) {
                     filePath = cursor.getString(0)
                 }
-                cursor?.close()
+                cursor.close()
             } catch (e: Exception) { // do nothing
             } finally {
                 try {
@@ -68,7 +68,7 @@ object Utils {
                     if (cursor!!.moveToFirst()) {
                         filePath = cursor.getString(0)
                     }
-                    cursor?.close()
+                    cursor.close()
                 } catch (e: Exception) { // do nothing
                 } finally {
                     try {

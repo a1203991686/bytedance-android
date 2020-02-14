@@ -7,42 +7,37 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.littlecorgi.minidouyin.MainActivity
-import com.littlecorgi.minidouyin.bean.OngoingMovies
-import com.littlecorgi.minidouyin.bean.OngoingMovies.MsBean
-import com.littlecorgi.minidouyin.network.IFeedInterface
-import com.littlecorgi.minidouyin.view.RecyclerAdapter
-import com.yc.pagerlib.recycler.OnPagerListener
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
+import com.littlecorgi.minidouyin.adapter.OngoingMovieRvAdapter
+import com.littlecorgi.minidouyin.databinding.ActivityMainBinding
+import com.littlecorgi.minidouyin.ijkplayer.VideoPlayerManager
+import com.littlecorgi.minidouyin.view.capturevideo.CaptureVideoActivity
+import com.littlecorgi.minidouyin.viewModel.MainActivityViewModel
 import com.yc.pagerlib.recycler.PagerLayoutManager
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
-import java.util.*
+
 
 /**
  * @author tianweikang
  */
 class MainActivity : AppCompatActivity() {
-    private lateinit var mRecyclerView: RecyclerView
-    private val mMsBeans = ArrayList<MsBean>()
-    private lateinit var mAdapter: RecyclerAdapter
-    private val mBtnCaptureVideo: ImageView? = null
-    private val isFirstPlay = false
+    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        mRecyclerView = findViewById(R.id.rv_feed)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory()).get(MainActivityViewModel::class.java)
+
         findViewById<View>(R.id.btn_capture_video).setOnClickListener {
             if (Build.VERSION.SDK_INT > 22) {
                 when {
@@ -81,58 +76,67 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         requestOngoingMovies()
-        initRecyclerView()
+        initRecycler()
     }
 
-    private fun initRecyclerView() {
-        mRecyclerView.setItemViewCacheSize(0)
-        mRecyclerView.setRecyclerListener { holder: RecyclerView.ViewHolder ->
-            Log.d(TAG, "initRecyclerView: 翻页了")
-            (holder as RecyclerAdapter.ViewHolder).mIjkPlayer.stop()
-            holder.mIjkPlayer.release()
-        }
-        val viewPagerLayoutManager = PagerLayoutManager(
-                this, OrientationHelper.VERTICAL)
-        viewPagerLayoutManager.setOnViewPagerListener(object : OnPagerListener {
-            override fun onInitComplete() {
-                println("OnPagerListener---onInitComplete--" + "初始化完成")
+    private fun initRecycler() {
+        binding.rvFeed.layoutManager = PagerLayoutManager(
+                this, OrientationHelper.VERTICAL
+        )
+//        val adapter = RecyclerAdapter(this)
+        val adapter = OngoingMovieRvAdapter(this, ArrayList())
+        binding.rvFeed.adapter = adapter
+//        binding.rvFeed.setItemViewCacheSize(1)
+//        binding.rvFeed.setRecyclerListener { holder: RecyclerView.ViewHolder ->
+//            Log.d(TAG, "initRecyclerView: 翻页了")
+//            // 在此主要是去释放正在播放的ijkPlayer的资源，然后重新去加载新的视频
+//            val videoPlayer: IjkVideoPlayer = (holder as OngoingMovieRvAdapter.ViewHolder).ijkplayer
+//            if (videoPlayer === VideoPlayerManager.instance()!!.getCurrentVideoPlayer()) {
+//                VideoPlayerManager.instance()!!.releaseVideoPlayer()
+//            }
+//        }
+        var xValue: Int = 0
+        var yValue: Int = 0
+        binding.rvFeed.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                xValue = dx
+                yValue = dy
             }
 
-            override fun onPageRelease(isNext: Boolean, position: Int) {
-                println("OnPagerListener---onPageRelease--$position-----$isNext")
-            }
-
-            override fun onPageSelected(position: Int, isBottom: Boolean) {
-                println("OnPagerListener---onPageSelected--$position-----$isBottom")
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    SCROLL_STATE_SETTLING -> {
+                        xValue = 0
+                        yValue = 0
+                    }
+                    SCROLL_STATE_IDLE -> {
+                        if (xValue < yValue) {
+                            VideoPlayerManager.instance()!!.releaseVideoPlayer()
+                        }
+                    }
+                    else -> {
+                    }
+                }
             }
         })
-        mRecyclerView.layoutManager = viewPagerLayoutManager
-        mAdapter = RecyclerAdapter(this, mMsBeans)
-        mRecyclerView.adapter = mAdapter
+        subscribeUi(adapter)
+    }
+
+    private fun subscribeUi(adapter: OngoingMovieRvAdapter) {
+        viewModel.movies.observe(this, androidx.lifecycle.Observer { movies ->
+            adapter.items.clear()
+            adapter.items.addAll(movies.ms!!)
+            adapter.notifyDataSetChanged()
+        })
+        viewModel.errorToastText.observe(this, androidx.lifecycle.Observer { errorTerxt ->
+            Toast.makeText(this, viewModel.errorToastText.value, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun requestOngoingMovies() {
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://api-m.mtime.cn/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        val iFeedInterface = retrofit.create(IFeedInterface::class.java)
-        val call = iFeedInterface.getMovie()
-        call.enqueue(object : Callback<OngoingMovies?> {
-            override fun onResponse(call: Call<OngoingMovies?>, response: Response<OngoingMovies?>) {
-                mAdapter.setData(response.body()!!.ms!!)
-                Toast.makeText(this@MainActivity, "获取成功", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onFailure(call: Call<OngoingMovies?>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Feed流加载失败：首页列表网络获取失败", Toast.LENGTH_SHORT).show()
-                t.printStackTrace()
-            }
-        })
-    }
-
-    override fun onPause() {
-        super.onPause()
+        viewModel.requestMovies()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
