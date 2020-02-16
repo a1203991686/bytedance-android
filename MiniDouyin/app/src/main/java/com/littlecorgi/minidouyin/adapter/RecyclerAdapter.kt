@@ -1,13 +1,6 @@
 package com.littlecorgi.minidouyin.adapter
 
-import android.content.Context
-import android.view.View
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.littlecorgi.minidouyin.R
-import com.littlecorgi.minidouyin.bean.douyinfeed.OngoingMovies.MsBean
-import com.littlecorgi.minidouyin.databinding.ItemRvFeedBinding
-import com.littlecorgi.minidouyin.ijkplayer.VideoPlayerListener
+//import com.littlecorgi.minidouyin.databinding.ItemRvFeedBinding
 
 /**
  * {MainActivity}中用于feed流展示的RecyclerView的Adapter
@@ -15,22 +8,22 @@ import com.littlecorgi.minidouyin.ijkplayer.VideoPlayerListener
  * @author Tian Weikang tianweikang.corgi@bytedance.com
  * @date 2020-02-08 20-49
  */
-class RecyclerAdapter(private val mContext: Context) : BaseBindingAdapter<MsBean, ItemRvFeedBinding>(mContext) {
-    override fun getLayoutResId(viewType: Int): Int {
-        return R.layout.item_rv_feed
-    }
-
-    override fun onBindItem(binding: ItemRvFeedBinding?, item: MsBean?) {
-        binding!!.movieMs = item
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any?>) {
-        val binding: ItemRvFeedBinding? = DataBindingUtil.getBinding(holder.itemView)
-        binding!!.ijkPlayer.mVideoPlayerSurfaceView!!.mIjkPlayerController.setListener(VideoPlayerListener())
-        binding!!.ijkPlayer.load("http://lf1-hscdn-tos.pstatp.com/obj/developer-baas/baas/tt7217xbo2wz3cem41/a8efa55c5c22de69_1560563154288.mp4")
-        binding!!.ijkPlayer.visibility = View.VISIBLE
-        binding!!.ivFeed.visibility = View.GONE
-
-        onBindItem(binding, items[position])
-    }
-}
+//class RecyclerAdapter(private val mContext: Context) : BaseBindingAdapter<MsBean, ItemRvFeedBinding>(mContext) {
+//    override fun getLayoutResId(viewType: Int): Int {
+//        return R.layout.item_rv_feed
+//    }
+//
+//    override fun onBindItem(binding: ItemRvFeedBinding?, item: MsBean?) {
+//        binding!!.movieMs = item
+//    }
+//
+//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any?>) {
+//        val binding: ItemRvFeedBinding? = DataBindingUtil.getBinding(holder.itemView)
+//        binding!!.ijkPlayer.mVideoPlayerSurfaceView!!.mIjkPlayerController.setListener(VideoPlayerListener())
+//        binding!!.ijkPlayer.load("http://lf1-hscdn-tos.pstatp.com/obj/developer-baas/baas/tt7217xbo2wz3cem41/a8efa55c5c22de69_1560563154288.mp4")
+//        binding!!.ijkPlayer.visibility = View.VISIBLE
+//        binding!!.ivFeed.visibility = View.GONE
+//
+//        onBindItem(binding, items[position])
+//    }
+//}

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,16 +16,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
-import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
+import cn.jzvd.Jzvd
 import com.littlecorgi.minidouyin.adapter.OngoingMovieRvAdapter
 import com.littlecorgi.minidouyin.databinding.ActivityMainBinding
-import com.littlecorgi.minidouyin.ijkplayer.VideoPlayerManager
 import com.littlecorgi.minidouyin.view.capturevideo.CaptureVideoActivity
 import com.littlecorgi.minidouyin.viewModel.MainActivityViewModel
 import com.yc.pagerlib.recycler.PagerLayoutManager
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
-
 
 /**
  * @author tianweikang
@@ -69,12 +66,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //加载native库
-        try {
-            IjkMediaPlayer.loadLibrariesOnce(null)
-            IjkMediaPlayer.native_profileBegin("libijkplayer.so")
-        } catch (e: Exception) {
-            finish()
-        }
+//        try {
+//            IjkMediaPlayer.loadLibrariesOnce(null)
+//            IjkMediaPlayer.native_profileBegin("libijkplayer.so")
+//        } catch (e: Exception) {
+//            finish()
+//        }
         requestOngoingMovies()
         initRecycler()
     }
@@ -86,39 +83,22 @@ class MainActivity : AppCompatActivity() {
 //        val adapter = RecyclerAdapter(this)
         val adapter = OngoingMovieRvAdapter(this, ArrayList())
         binding.rvFeed.adapter = adapter
-//        binding.rvFeed.setItemViewCacheSize(1)
-//        binding.rvFeed.setRecyclerListener { holder: RecyclerView.ViewHolder ->
-//            Log.d(TAG, "initRecyclerView: 翻页了")
-//            // 在此主要是去释放正在播放的ijkPlayer的资源，然后重新去加载新的视频
-//            val videoPlayer: IjkVideoPlayer = (holder as OngoingMovieRvAdapter.ViewHolder).ijkplayer
-//            if (videoPlayer === VideoPlayerManager.instance()!!.getCurrentVideoPlayer()) {
-//                VideoPlayerManager.instance()!!.releaseVideoPlayer()
-//            }
-//        }
-        var xValue: Int = 0
-        var yValue: Int = 0
-        binding.rvFeed.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                xValue = dx
-                yValue = dy
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-                    SCROLL_STATE_SETTLING -> {
-                        xValue = 0
-                        yValue = 0
-                    }
-                    SCROLL_STATE_IDLE -> {
-                        if (xValue < yValue) {
-                            VideoPlayerManager.instance()!!.releaseVideoPlayer()
-                        }
-                    }
-                    else -> {
+        binding.rvFeed.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+                val jzvd: Jzvd = view.findViewById(R.id.ijkPlayer)
+                // 当当前的item被滑出时释放资源
+                if (jzvd != null && Jzvd.CURRENT_JZVD != null &&
+                        jzvd.jzDataSource.containsTheUrl(Jzvd.CURRENT_JZVD.jzDataSource.currentUrl)) {
+                    if (Jzvd.CURRENT_JZVD != null && Jzvd.CURRENT_JZVD.screen != Jzvd.SCREEN_FULLSCREEN) {
+                        Jzvd.releaseAllVideos()
                     }
                 }
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                val jzvd: Jzvd = view.findViewById(R.id.ijkPlayer)
+                // 当滑动到当前item时自动播放
+                jzvd.postDelayed({ jzvd.startVideo() }, 500)
             }
         })
         subscribeUi(adapter)
@@ -181,5 +161,26 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSION_AUDIO_OK = 101
         private const val PERMISSION_WRITE_OK = 102
         private const val PERMISSION_READ_OK = 103
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Jzvd.releaseAllVideos()
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (event.getKeyCode() === KeyEvent.KEYCODE_BACK) {
+            return if (isTaskRoot) {
+                moveTaskToBack(false)
+                true
+            } else {
+                super.onKeyDown(keyCode, event)
+            }
+        }
+        return false
     }
 }

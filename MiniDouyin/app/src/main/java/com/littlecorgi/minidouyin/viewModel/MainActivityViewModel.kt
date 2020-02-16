@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlecorgi.minidouyin.Event
 import com.littlecorgi.minidouyin.Result
-import com.littlecorgi.minidouyin.bean.douyinfeed.OngoingMovieRepository
-import com.littlecorgi.minidouyin.bean.douyinfeed.OngoingMovies
+import com.littlecorgi.minidouyin.bean.ongoingmovies.OngoingMovieRepository
+import com.littlecorgi.minidouyin.bean.ongoingmovies.OngoingMovies
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

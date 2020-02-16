@@ -12,11 +12,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.littlecorgi.minidouyin.R
 import com.littlecorgi.minidouyin.ViewModelFactory
 import com.littlecorgi.minidouyin.bean.publishvideo.PostVideoResponse
+import com.littlecorgi.minidouyin.databinding.ActivityPublishVideoBinding
 import com.littlecorgi.minidouyin.network.IPostVideoInterface
 import com.littlecorgi.minidouyin.utils.ResourceUtils
 import com.littlecorgi.minidouyin.viewModel.PublishVideoViewModel
@@ -36,37 +38,24 @@ import java.io.File
 class PublishVideoActivity : AppCompatActivity() {
 
     private lateinit var viewModel: PublishVideoViewModel
+    private lateinit var mBinding: ActivityPublishVideoBinding
 
     private lateinit var mBtn: Button
     private lateinit var mImageView: ImageView
+    private lateinit var mFile: File
+    private lateinit var mFilePathString: String
     private var mSelectedImage: Uri? = null
     private var mSelectedVideo: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_publish_video)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_publish_video)
         viewModel = ViewModelProviders.of(this, ViewModelFactory()).get(PublishVideoViewModel::class.java)
-        mBtn = findViewById(R.id.button)
-        mImageView = findViewById(R.id.imageView)
-        initBtns()
-    }
 
-    private fun initBtns() {
-        mBtn.setOnClickListener {
-            val s = mBtn.text.toString()
-            if (getString(R.string.select_an_image) == s) {
-                if (requestReadExternalStoragePermission("select an image")) {
-                    chooseImage()
-                }
-            } else if (getString(R.string.post_it) == s) {
-                if (mSelectedVideo != null && mSelectedImage != null) {
-                    postVideo()
-                } else {
-                    throw IllegalArgumentException("error data uri, mSelectedVideo = $mSelectedVideo, mSelectedImage = $mSelectedImage")
-                }
-            } else if (getString(R.string.success_try_refresh) == s) {
-                mBtn.setText(R.string.select_an_image)
-            }
-        }
+        mFilePathString = intent.getStringExtra("VideoFile")!!
+        mBinding.ijkPlayerPreview.setUp(mFilePathString, "")
+        mBinding.ijkPlayerPreview.postDelayed({
+            mBinding.ijkPlayerPreview.startVideo()
+        }, 500)
     }
 
     private fun requestReadExternalStoragePermission(explanation: String): Boolean {

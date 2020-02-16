@@ -1,6 +1,6 @@
 package com.littlecorgi.minidouyin.network
 
-import com.littlecorgi.minidouyin.bean.douyinfeed.OngoingMovies
+import com.littlecorgi.minidouyin.bean.ongoingmovies.OngoingMovies
 import retrofit2.Call
 import retrofit2.http.GET
 

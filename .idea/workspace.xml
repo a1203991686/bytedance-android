@@ -160,7 +160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581423050148</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="将MainActivity改成MVVM形式，重构了IjkPlayer，但是视频播放不了，正在排查问题">
+      <created>1581674678180</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1581674678180</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -254,7 +261,8 @@
     <MESSAGE value="完成miniDouyin首页的RecyclerView" />
     <MESSAGE value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
     <MESSAGE value="将miniDouyin代码转换成kotlin" />
-    <option name="LAST_COMMIT_MESSAGE" value="将miniDouyin代码转换成kotlin" />
+    <MESSAGE value="将MainActivity改成MVVM形式，重构了IjkPlayer，但是视频播放不了，正在排查问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="将MainActivity改成MVVM形式，重构了IjkPlayer，但是视频播放不了，正在排查问题" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">

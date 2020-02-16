@@ -7,7 +7,6 @@ import com.littlecorgi.minidouyin.ijkplayer.controller.IjkPlayerController
 import tv.danmaku.ijk.media.player.IMediaPlayer
 
 /**
- *
  * @author Tian Weikang tianweikang.corgi@bytedance.com
  * @date 2020-02-14 15:37
  */

@@ -3,7 +3,6 @@ package com.littlecorgi.minidouyin.ijkplayer
 import com.littlecorgi.minidouyin.ijkplayer.view.IjkVideoPlayer
 
 /**
- *
  * @author Tian Weikang tianweikang.corgi@bytedance.com
  * @date 2020-02-14 11:06
  */
@@ -56,7 +55,7 @@ class VideoPlayerManager {
      */
     fun setCurrentVideoPlayer(videoPlayer: IjkVideoPlayer) {
         if (mVideoPlayer !== videoPlayer) {
-            releaseVideoPlayer()
+//            releaseVideoPlayer()
             mVideoPlayer = videoPlayer
         }
     }
@@ -90,6 +89,7 @@ class VideoPlayerManager {
      */
     fun releaseVideoPlayer() {
         if (mVideoPlayer != null) {
+            mVideoPlayer!!.stop()
             mVideoPlayer!!.release()
             mVideoPlayer = null
         }

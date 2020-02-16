@@ -49,7 +49,7 @@ class VideoPlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_play)
 
-        mIjkVideoPlayer = findViewById(R.id.ijkPlayer)
+        mIjkVideoPlayer = findViewById(R.id.ijkPlayer1)
         mButtonStartOrPause = findViewById(R.id.button_start_pause)
         mSeekBar = findViewById(R.id.seekBar)
         mTextViewTime = findViewById(R.id.tv_time)

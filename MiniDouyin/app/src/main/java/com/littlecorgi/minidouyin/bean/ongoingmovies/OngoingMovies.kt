@@ -1,4 +1,4 @@
-package com.littlecorgi.minidouyin.bean.douyinfeed
+package com.littlecorgi.minidouyin.bean.ongoingmovies
 
 import com.google.gson.annotations.SerializedName
 
