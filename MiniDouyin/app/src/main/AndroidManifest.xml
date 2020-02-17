@@ -32,7 +32,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".VideoPlayActivity" />
+        <activity android:name=".view.chooseframe.ChooseFrameActivity" />
         <activity android:name=".view.capturevideo.CaptureVideoActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

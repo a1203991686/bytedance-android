@@ -11,11 +11,13 @@ import android.hardware.Camera.PictureCallback
 import android.media.CamcorderProfile
 import android.media.MediaRecorder
 import android.os.*
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.littlecorgi.minidouyin.R
 import com.littlecorgi.minidouyin.ViewModelFactory
@@ -44,8 +46,13 @@ class CaptureVideoActivity : AppCompatActivity() {
         private const val DEGREE_360 = 360
         private const val MSG_OPEN_AUTO_FOCUS = 101
         private const val MSG_RECORD_PROGRESS = 102
-        // 录制时间达到15s时
+        // 当录制时间达到15s时
         private const val MSG_FINISH_RECORD = 103
+
+        // 计时器的最大值，也就是视频的最大录制时间，当到此事件时会自动停止录制
+        private const val TIMER_MAX: Long = 15 * 1000
+        // 计时器的时间间隔
+        private const val TIMER_INTERVAL: Long = 10
     }
 
     private lateinit var mBinding: ActivityCaptureVideoBinding
@@ -55,25 +62,16 @@ class CaptureVideoActivity : AppCompatActivity() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
-                MSG_OPEN_AUTO_FOCUS ->
+                MSG_OPEN_AUTO_FOCUS -> {
                     openAutoFocus()
-                MSG_RECORD_PROGRESS -> {
-                    mBinding.progressBarRecorde.progress = recordProgress
-                    recordProgress++
-                    if (isRecording) {
-                        sendEmptyMessageDelayed(MSG_RECORD_PROGRESS, 10)
-                    }
-                    if (recordProgress == mBinding.progressBarRecorde.max) {
-                        sendEmptyMessage(MSG_FINISH_RECORD)
-                    }
+                    mCamera!!.setDisplayOrientation(90)
                 }
                 MSG_FINISH_RECORD -> {
                     // 设置标志位
                     isRecording = false
                     isRecordStart = true
                     //停止录制，并释放MediaRecorder资源
-                    mMediaRecorder!!.stop()
-                    releaseMediaRecorder()
+                    stopCapture()
                     // 将录制按钮恢复成未录制状态
                     mBinding.btnRecord.setCenterMode(ShootButton.MODE_CENTER_CIRCLE)
                     mBinding.btnRecord.setCenterColorRes(R.color.colorAccent)
@@ -86,6 +84,7 @@ class CaptureVideoActivity : AppCompatActivity() {
     private var mFile: File? = null
     // 默认打开的相机朝向
     private var cameraFacingType = CameraInfo.CAMERA_FACING_FRONT
+    private lateinit var mTimer: DouyinTimer
     private var isRecording = false
     // 判断是不是第一次开始录制，主要是用于判断录制按钮，
     // 如果是第一次录制则为true，如果不是则为false，此时点击录制按钮只是暂停而不是终止录制
@@ -93,7 +92,25 @@ class CaptureVideoActivity : AppCompatActivity() {
     private var isFacing = false
     private var rotationDegree = 0
     private var mCameraId = 0
-    private var recordProgress = 0
+    // 代表已经录制了的时间
+    private var hasCapturedTime: Long = 0
+    private lateinit var surfaceHolder: SurfaceHolder
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (mFile != null) {
+            if (!mFile!!.delete()) {
+                mCaptureVideoViewModel.setToastContent("文件删除失败")
+            } else {
+                mCaptureVideoViewModel.setToastContent("文件删除成功")
+            }
+        }
+        //停止录制，并释放MediaRecorder资源
+        stopCapture()
+        isRecordStart = true
+        isRecording = false
+        finish()
+    }
 
     override fun onPause() {
         super.onPause()
@@ -103,6 +120,7 @@ class CaptureVideoActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mCamera = getCamera(mCameraId)
+        createSurfaceView()
         // 开启相机自动对焦，延时是因为担心执行这行是Camera还没打开
         mMainHandler.sendEmptyMessageDelayed(MSG_OPEN_AUTO_FOCUS, 500)
     }
@@ -135,16 +153,7 @@ class CaptureVideoActivity : AppCompatActivity() {
         // 开启相机自动对焦，延时是因为担心执行这行是Camera还没打开
         mMainHandler.sendEmptyMessageDelayed(MSG_OPEN_AUTO_FOCUS, 500)
 
-        val surfaceHolder = mBinding.surface.holder
-        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
-        surfaceHolder.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
-                startPreview(surfaceHolder)
-            }
-
-            override fun surfaceChanged(surfaceHolder: SurfaceHolder, i: Int, i1: Int, i2: Int) {}
-            override fun surfaceDestroyed(surfaceHolder: SurfaceHolder) {}
-        })
+        createSurfaceView()
         /*
          * 录制按钮
          *
@@ -157,15 +166,15 @@ class CaptureVideoActivity : AppCompatActivity() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     mMediaRecorder!!.pause()
                 } else {
-                    Toast.makeText(this, "不支持暂停录制，录制停止", Toast.LENGTH_SHORT).show()
+                    mCaptureVideoViewModel.setToastContent("不支持暂停录制，录制停止")
                     //停止录制，并释放MediaRecorder资源
-                    mMediaRecorder!!.stop()
-                    releaseMediaRecorder()
+                    stopCapture()
                     isRecordStart = true
                 }
                 isRecording = false
                 mBinding.btnRecord.setCenterMode(ShootButton.MODE_CENTER_CIRCLE)
                 mBinding.btnRecord.setCenterColorRes(R.color.colorAccent)
+                mTimer.cancel()
             } else {
                 if (isRecordStart) {
                     if (prepareVideoRecorder()) {
@@ -176,6 +185,9 @@ class CaptureVideoActivity : AppCompatActivity() {
                         mBinding.btnRecord.setCenterColorRes(R.color.colorAccent)
                         mBinding.ivFinish.visibility = View.VISIBLE
                         mMainHandler.sendEmptyMessage(MSG_RECORD_PROGRESS)
+                        isRecording = true
+                        mTimer = DouyinTimer(TIMER_MAX - hasCapturedTime, TIMER_INTERVAL)
+                        mTimer.start()
                     } else {
                         releaseMediaRecorder()
                         Log.d(TAG, "onCreate: 录制失败：VideoRecorder未就绪")
@@ -184,8 +196,13 @@ class CaptureVideoActivity : AppCompatActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         mMediaRecorder!!.resume()
                     }
+                    mBinding.btnRecord.setCenterMode(ShootButton.MODE_CENTER_RECT)
+                    mBinding.btnRecord.setCenterColorRes(R.color.colorAccent)
+                    isRecording = true
+                    mTimer = DouyinTimer(TIMER_MAX - hasCapturedTime, TIMER_INTERVAL)
+                    mTimer.start()
                 }
-                isRecording = true
+
             }
         }
         // 翻转摄像头按钮
@@ -221,8 +238,7 @@ class CaptureVideoActivity : AppCompatActivity() {
         }
         mBinding.ivFinish.setOnClickListener {
             //停止录制，并释放MediaRecorder资源
-            mMediaRecorder!!.stop()
-            releaseMediaRecorder()
+            stopCapture()
             isRecordStart = true
             isRecording = false
 
@@ -234,20 +250,44 @@ class CaptureVideoActivity : AppCompatActivity() {
         mBinding.ivCloseRecorde.setOnClickListener {
             if (mFile != null) {
                 if (!mFile!!.delete()) {
-                    Toast.makeText(this, "文件删除失败", Toast.LENGTH_SHORT).show()
+                    mCaptureVideoViewModel.setToastContent("文件删除失败")
                 } else {
-                    Toast.makeText(this, "文件删除成功", Toast.LENGTH_SHORT).show()
+                    mCaptureVideoViewModel.setToastContent("文件删除成功")
                 }
             }
             //停止录制，并释放MediaRecorder资源
-            mMediaRecorder!!.stop()
-            releaseMediaRecorder()
+            stopCapture()
             isRecordStart = true
             isRecording = false
 
             finish()
         }
-        mBinding.progressBarRecorde.max = 15 * 1000 / 10
+        mBinding.progressBarRecorde.max = TIMER_MAX.toInt()
+        subscribeUi()
+    }
+
+    private fun createSurfaceView() {
+        val param = mBinding.surface.layoutParams
+//        param.height = 200
+
+        param.height = getScreenWidth() * 16 / 9
+        mBinding.surface.layoutParams = param
+        surfaceHolder = mBinding.surface.holder
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
+        surfaceHolder.addCallback(object : SurfaceHolder.Callback {
+            override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
+                startPreview(surfaceHolder)
+            }
+
+            override fun surfaceChanged(surfaceHolder: SurfaceHolder, i: Int, i1: Int, i2: Int) {}
+            override fun surfaceDestroyed(surfaceHolder: SurfaceHolder) {}
+        })
+    }
+
+    private fun subscribeUi() {
+        mCaptureVideoViewModel.toastContent.observe(this, Observer { toastContext ->
+            Toast.makeText(this, toastContext, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun openAutoFocus(): Boolean {
@@ -271,7 +311,7 @@ class CaptureVideoActivity : AppCompatActivity() {
         return if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             true
         } else {
-            Toast.makeText(this, "对不起，您的设备不支持Camera", Toast.LENGTH_SHORT).show()
+            mCaptureVideoViewModel.setToastContent("对不起，您的设备不支持Camera")
             false
         }
     }
@@ -338,6 +378,8 @@ class CaptureVideoActivity : AppCompatActivity() {
         mMediaRecorder!!.setVideoSource(MediaRecorder.VideoSource.CAMERA)
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
         mMediaRecorder!!.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH))
+        // 设置角度
+        mMediaRecorder!!.setOrientationHint(90)
         // Step 4: Set output file
         mFile = Utils.getOutputMediaFile(Utils.MEDIA_TYPE_VIDEO)
         mMediaRecorder!!.setOutputFile(mFile.toString())
@@ -410,5 +452,31 @@ class CaptureVideoActivity : AppCompatActivity() {
         return optimalSize
     }
 
+    private fun stopCapture() {
+        //停止录制，并释放MediaRecorder资源
+        mMediaRecorder!!.stop()
+        releaseMediaRecorder()
+    }
 
+    //获取运行屏幕宽度
+    private fun getScreenWidth(): Int {
+        val dm = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(dm)
+        return dm.widthPixels
+    }
+
+    inner class DouyinTimer(millisInFuture: Long,
+                            countDownInterval: Long
+    ) : CountDownTimer(millisInFuture, countDownInterval) {
+        override fun onFinish() {
+            mMainHandler.sendEmptyMessage(MSG_FINISH_RECORD)
+        }
+
+        override fun onTick(millisUntilFinished: Long) {
+            hasCapturedTime = TIMER_MAX - millisUntilFinished
+            val progress = hasCapturedTime / TIMER_MAX * 100
+            mBinding.progressBarRecorde.progress = hasCapturedTime.toInt()
+        }
+
+    }
 }

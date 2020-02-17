@@ -20,20 +20,20 @@ import cn.jzvd.Jzvd
 import com.littlecorgi.minidouyin.adapter.OngoingMovieRvAdapter
 import com.littlecorgi.minidouyin.databinding.ActivityMainBinding
 import com.littlecorgi.minidouyin.view.capturevideo.CaptureVideoActivity
-import com.littlecorgi.minidouyin.viewModel.MainActivityViewModel
+import com.littlecorgi.minidouyin.viewModel.MainViewModel
 import com.yc.pagerlib.recycler.PagerLayoutManager
 
 /**
  * @author tianweikang
  */
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var mViewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory()).get(MainActivityViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
 
         findViewById<View>(R.id.btn_capture_video).setOnClickListener {
             if (Build.VERSION.SDK_INT > 22) {
@@ -105,18 +105,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeUi(adapter: OngoingMovieRvAdapter) {
-        viewModel.movies.observe(this, androidx.lifecycle.Observer { movies ->
+        mViewModel.movies.observe(this, androidx.lifecycle.Observer { movies ->
             adapter.items.clear()
             adapter.items.addAll(movies.ms!!)
             adapter.notifyDataSetChanged()
         })
-        viewModel.errorToastText.observe(this, androidx.lifecycle.Observer { errorTerxt ->
-            Toast.makeText(this, viewModel.errorToastText.value, Toast.LENGTH_SHORT).show()
+        mViewModel.errorToastText.observe(this, androidx.lifecycle.Observer { errorText ->
+            Toast.makeText(this, errorText, Toast.LENGTH_SHORT).show()
         })
     }
 
     private fun requestOngoingMovies() {
-        viewModel.requestMovies()
+        mViewModel.requestMovies()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -165,6 +165,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
     }
 
     override fun onPause() {

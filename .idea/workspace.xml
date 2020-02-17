@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="dc0a0e5b-10f6-4f7e-a026-5234ca104665" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +29,7 @@
     </navigator>
     <panes>
       <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -42,7 +41,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -167,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581674678180</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="实现miniDouyin的基本功能，但是还存在bug">
+      <created>1581855163778</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1581855163778</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -262,7 +267,8 @@
     <MESSAGE value="完成miniDouyin基本功能，包括首页feed流展示、从网络加载视频、拍摄视频、发布视频" />
     <MESSAGE value="将miniDouyin代码转换成kotlin" />
     <MESSAGE value="将MainActivity改成MVVM形式，重构了IjkPlayer，但是视频播放不了，正在排查问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="将MainActivity改成MVVM形式，重构了IjkPlayer，但是视频播放不了，正在排查问题" />
+    <MESSAGE value="实现miniDouyin的基本功能，但是还存在bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="实现miniDouyin的基本功能，但是还存在bug" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Chapter-3/Homework/.idea/workspace.xml">

@@ -7,35 +7,26 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.littlecorgi.minidouyin.R
 import com.littlecorgi.minidouyin.ViewModelFactory
-import com.littlecorgi.minidouyin.bean.publishvideo.PostVideoResponse
 import com.littlecorgi.minidouyin.databinding.ActivityPublishVideoBinding
-import com.littlecorgi.minidouyin.network.IPostVideoInterface
-import com.littlecorgi.minidouyin.utils.ResourceUtils
+import com.littlecorgi.minidouyin.view.chooseframe.ChooseFrameActivity
 import com.littlecorgi.minidouyin.viewModel.PublishVideoViewModel
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 /**
  * @author tianweikang
  */
-class PublishVideoActivity : AppCompatActivity() {
+class PublishVideoActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var viewModel: PublishVideoViewModel
     private lateinit var mBinding: ActivityPublishVideoBinding
@@ -56,6 +47,17 @@ class PublishVideoActivity : AppCompatActivity() {
         mBinding.ijkPlayerPreview.postDelayed({
             mBinding.ijkPlayerPreview.startVideo()
         }, 500)
+
+        subscribeUI()
+    }
+
+    private fun subscribeUI() {
+        viewModel.errorToastText.observe(this, Observer { text ->
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        })
+        viewModel.postResponse.observe(this, Observer {
+            TODO("API无法访问，如果可以访问再去具体实现")
+        })
     }
 
     private fun requestReadExternalStoragePermission(explanation: String): Boolean {
@@ -104,41 +106,11 @@ class PublishVideoActivity : AppCompatActivity() {
         }
     }
 
-    private fun getMultipartFromUri(name: String, uri: Uri?): MultipartBody.Part { // if NullPointerException thrown, try to allow storage permission in system settings
-        val f = File(ResourceUtils.getRealPath(this, uri!!))
-        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f)
-        return MultipartBody.Part.createFormData(name, f.name, requestFile)
-    }
 
     private fun postVideo() {
         mBtn.text = "POSTING..."
         mBtn.isEnabled = false
-        // TODO-C2 (6) Send Request to post a video with its cover image
-// if success, make a text Toast and show
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://www.zhangshuo.fun/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        val postVideoInterface = retrofit.create(IPostVideoInterface::class.java)
-        //        MultipartBody.Part video = getMultipartFromUri("video", mSelectedVideo);
-//        MultipartBody.Part image = getMultipartFromUri("cover_image", mSelectedImage);
-//        List<MultipartBody.Part> parts = new ArrayList<>();
-//        parts.add(video);
-//        parts.add(image);
-        val image = getMultipartFromUri("image", mSelectedImage)
-        val uploadCall = postVideoInterface.uploadOneFile(image)
-        uploadCall!!.enqueue(object : Callback<PostVideoResponse?> {
-            override fun onResponse(call: Call<PostVideoResponse?>, response: Response<PostVideoResponse?>) {
-                Toast.makeText(this@PublishVideoActivity, "success", Toast.LENGTH_SHORT).show()
-                if (response.body() != null) {
-                    Glide.with(this@PublishVideoActivity).load(response.body()!!.data!!.url).into(mImageView)
-                }
-            }
-
-            override fun onFailure(call: Call<PostVideoResponse?>, t: Throwable) {
-                Toast.makeText(this@PublishVideoActivity, "fail", Toast.LENGTH_SHORT).show()
-            }
-        })
+        viewModel.postVideo(mSelectedImage!!, mSelectedVideo!!, this)
     }
 
     companion object {
@@ -146,5 +118,22 @@ class PublishVideoActivity : AppCompatActivity() {
         private const val PICK_VIDEO = 2
         private const val GRANT_PERMISSION = 3
         private val TAG = PublishVideoActivity::class.java.simpleName
+    }
+
+    override fun onClick(v: View?) {
+        val id = v!!.id
+        when (id) {
+            R.id.iv_back_to_capture -> {
+                finish()
+            }
+            R.id.iv_finish_to_choose -> {
+                val intent = Intent(
+                        this,
+                        ChooseFrameActivity::class.java
+                )
+
+                startActivity(intent)
+            }
+        }
     }
 }

@@ -3,7 +3,6 @@ package com.littlecorgi.minidouyin.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.littlecorgi.minidouyin.Event
 
 /**
  *
@@ -12,8 +11,11 @@ import com.littlecorgi.minidouyin.Event
  */
 class CaptureVideoViewModel : ViewModel() {
 
-    private val _startCaptureClickEvent = MutableLiveData<Event<Unit>>()
-    val startCaptureClickEvent: LiveData<Event<Unit>> = _startCaptureClickEvent
+    // Toast内容
+    private val _toastContent = MutableLiveData<String>()
+    val toastContent: LiveData<String> = _toastContent
 
-
+    fun setToastContent(text: String) {
+        _toastContent.value = text
+    }
 }

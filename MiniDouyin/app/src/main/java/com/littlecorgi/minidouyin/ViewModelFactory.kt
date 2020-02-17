@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.littlecorgi.minidouyin.bean.ongoingmovies.DefaultOngoingMovieRepository
 import com.littlecorgi.minidouyin.bean.publishvideo.DefaultPublishVideoRepository
 import com.littlecorgi.minidouyin.viewModel.CaptureVideoViewModel
-import com.littlecorgi.minidouyin.viewModel.MainActivityViewModel
+import com.littlecorgi.minidouyin.viewModel.ChooseFrameViewModel
+import com.littlecorgi.minidouyin.viewModel.MainViewModel
 import com.littlecorgi.minidouyin.viewModel.PublishVideoViewModel
 
 /**
@@ -17,8 +18,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         when {
-            modelClass.isAssignableFrom(MainActivityViewModel::class.java) -> {
-                return MainActivityViewModel(
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                return MainViewModel(
                         ongoingMovieRepository = DefaultOngoingMovieRepository()
                 ) as T
             }
@@ -29,6 +30,10 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
             modelClass.isAssignableFrom(CaptureVideoViewModel::class.java) -> {
                 return CaptureVideoViewModel(
+                ) as T
+            }
+            modelClass.isAssignableFrom(ChooseFrameViewModel::class.java) -> {
+                return ChooseFrameViewModel(
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
